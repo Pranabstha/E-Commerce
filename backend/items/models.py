@@ -4,6 +4,7 @@ from django.db import models
 from authentication import models as userAuthModel
 
 # Create your models here.
+# asd
 class Items(models.Model):
     uid = models.UUIDField(unique=True, editable=False, default=uuid.uuid4, verbose_name='items identifier')
     item_name = models.CharField(max_length = 50)
