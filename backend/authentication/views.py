@@ -2,7 +2,7 @@
 from rest_framework.response import Response
 from django.contrib.auth import authenticate,login, logout
 from .models import User
-from .serializers import UserSerializers
+from .serializers import UserSerializer
 from rest_framework import generics
 from rest_framework.permissions import IsAdminUser
 from rest_framework.views import APIView
@@ -12,21 +12,26 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class UserDetails(APIView):
-    serializer_class = UserSerializers
-
     def post(self, request):
-        serializer = UserSerializers(data=request.data)
+        print(request.data)
+        serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
-            obj = serializer.save()
-            obj.set_password(obj.password)
-            obj.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response({
-            'error': True,
-            'data': 'Unable to create user',
-            'status': status.HTTP_400_BAD_REQUEST   
-        },status=status.HTTP_400_BAD_REQUEST) 
-    
+            serializer.save()          
+            return Response(
+                {
+                    'error': False,
+                    'data': serializer.data,
+                    'message': 'User has successfully been created.',
+                    'status': status.HTTP_201_CREATED
+                },
+                status=status.HTTP_201_CREATED)
+        return Response(
+            {
+                'error': True,
+                'message': serializer.errors,
+                'status': status.HTTP_400_BAD_REQUEST
+            },
+            status=status.HTTP_400_BAD_REQUEST)
 
 class UserLogin(APIView):
     def post(self,request):

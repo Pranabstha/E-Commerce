@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework.response import Response
 from .serializers import ItemSerializers
 from rest_framework.views import APIView
@@ -11,10 +10,10 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 class ItemDetails(APIView):
     permission_classes = (IsAuthenticated,)
 
-
     def post(self, request):
         user = request.user
-        if user.is_superuser and user.is_staff:
+        print(user.is_vender,"---------------------")
+        if user.is_superuser or user.is_vender:
             serializer = ItemSerializers(data=request.data)
             if serializer.is_valid():
                 obj = serializer.save()
@@ -24,7 +23,6 @@ class ItemDetails(APIView):
                                 "status":"Items added successfull"
                                 },status=status.HTTP_201_CREATED)
             else:
-                print(serializer.errors)
                 return Response({
                     'error': True,
                     'data': 'Unable to register items',
@@ -34,14 +32,15 @@ class ItemDetails(APIView):
         else:
             return Response({
                     'error': True,
-                    'data': 'only admins and customer are able to perform this operation',
+                    'msg': 'only admins and superuser are able to perform this operation',
                     'status': status.HTTP_400_BAD_REQUEST,  
                 }, status=status.HTTP_400_BAD_REQUEST)    
         
 
+# Geting the items data from the database
     def get(self, request):
         user = request.user
-        if user.is_customer or user.is_superuser:
+        if user:
             obj = Items.objects.all()
         else:
             obj = Items.objects.filter(user=user)
@@ -58,10 +57,10 @@ class ItemDetails(APIView):
             'status': status.HTTP_400_BAD_REQUEST   
         },status=status.HTTP_400_BAD_REQUEST)   
 
-
+# update operation ---------------------------------------------------------
     def patch(self, request):
         user = request.user
-        if user.is_superuser and user.is_staff:
+        if user.is_superuser and user.is_staff or user.is_vender:
             try:
                 id = request.data['id']
             except:
@@ -85,7 +84,7 @@ class ItemDetails(APIView):
                 serailize.save()        
                 return Response({
                     'error': False,
-                    'data':'item uopdated successfully', 
+                    'data':'item updated successfully', 
                     'status':status.HTTP_200_OK
                 },status=status.HTTP_200_OK)
             else: 
@@ -97,21 +96,20 @@ class ItemDetails(APIView):
         else:
             return Response({
                     'error': True,
-                    'data': 'only admins and customer are able to perform this operation',
+                    'data': 'You dont have the access to perform this operation',
                     'status': status.HTTP_400_BAD_REQUEST,  
                 }, status=status.HTTP_400_BAD_REQUEST)           
 
-
+# delete operation --------------------------------------
     def delete(self, request):
         user = request.user
-        if user.is_superuser and user.is_staff:
+        if user.is_superuser and user.is_staff or user.is_vender:
             try:
                 id = request.data['id']
-
             except:
                 return Response({
                     'error': True,
-                    'data': 'id required',
+                    'data': 'Please Insert the ID ',
                     'status': status.HTTP_400_BAD_REQUEST   
                 },
                     status=status.HTTP_400_BAD_REQUEST
@@ -121,20 +119,20 @@ class ItemDetails(APIView):
             except: 
                 return Response({
                 'error': True,
-                'data': 'blog not found.',
+                'data': 'Product Not found!!',
                 'status': status.HTTP_400_BAD_REQUEST   
             },status=status.HTTP_400_BAD_REQUEST)            
 
             obj.delete()      
             return Response({
                 'error': False,
-                'data':'Deleted Successfully', 
+                'data':'Product Deleted Successfully', 
                 'status':status.HTTP_200_OK
             },status=status.HTTP_200_OK)
         else:
             return Response({
                     'error': True,
-                    'data': 'only admins and customer are able to perform this operation',
+                    'data': 'You dont have the access to perform this operation',
                     'status': status.HTTP_400_BAD_REQUEST, 
                 }, status=status.HTTP_400_BAD_REQUEST)       
 

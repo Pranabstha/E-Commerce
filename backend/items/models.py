@@ -11,10 +11,11 @@ class Items(models.Model):
     item_description = models.CharField(max_length = 255)
     item_category = models.CharField(max_length = 50)
     item_price = models.IntegerField()
+    quantity = models.IntegerField(default=1)
     item_image = models.ImageField(upload_to='items_image')
     created_date = models.DateTimeField(default=timezone.now)
     modified_date = models.DateTimeField(default=timezone.now)
-    user = models.ForeignKey(userAuthModel.User, on_delete=models.CASCADE, blank=True, null= True)
+    user = models.ForeignKey(userAuthModel.User, on_delete=models.CASCADE, blank=False, null= False)
 
     class Meta:
         verbose_name = 'item'
