@@ -12,7 +12,7 @@ class ItemDetails(APIView):
 
     def post(self, request):
         user = request.user
-        print(user.is_vender,"---------------------")
+        # print(user.is_vender,"---------------------")
         if user.is_superuser or user.is_vender:
             serializer = ItemSerializers(data=request.data)
             if serializer.is_valid():
@@ -52,7 +52,7 @@ class ItemDetails(APIView):
                 'status':status.HTTP_200_OK
             },status=status.HTTP_200_OK)
         return Response({
-            'error': True,
+            'error': False,
             'data': 'Item unavaliable',
             'status': status.HTTP_400_BAD_REQUEST   
         },status=status.HTTP_400_BAD_REQUEST)   
