@@ -1,20 +1,21 @@
 
-from rest_framework.response import Response
-from django.contrib.auth import authenticate,login, logout
+from rest_framework.response import Response# type: ignore
+from django.contrib.auth import authenticate,login, logout# type: ignore
 from .models import User
 from .serializers import UserSerializer
-from rest_framework import generics
-from rest_framework.permissions import IsAdminUser
-from rest_framework.views import APIView
-from rest_framework import status
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework import generics# type: ignore
+from rest_framework.permissions import IsAdminUser# type: ignore
+from rest_framework.views import APIView# type: ignore
+from rest_framework import status# type: ignore
+from rest_framework.permissions import AllowAny, IsAuthenticated# type: ignore
+from rest_framework_simplejwt.tokens import RefreshToken # type: ignore
 
 
 class UserDetails(APIView):
     def post(self, request):
-        print(request.data)
+        print(request.data,"-=-=-=-=-=-=-=-=-=-=-=-=-=-=-")
         serializer = UserSerializer(data=request.data)
+        print("0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0")
         if serializer.is_valid():
             serializer.save()          
             return Response(
@@ -35,6 +36,7 @@ class UserDetails(APIView):
 
 class UserLogin(APIView):
     def post(self,request):
+        print(request.data)
         email = request.data['email']
         password = request.data['password']
         user = authenticate( email = email, password = password)

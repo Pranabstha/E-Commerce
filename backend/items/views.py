@@ -3,7 +3,7 @@ from .serializers import ItemSerializers
 from rest_framework.views import APIView
 from rest_framework import status
 from .models import Items
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated # type: ignore
 
 
 # Create your views here.
