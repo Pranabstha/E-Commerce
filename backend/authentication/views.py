@@ -13,9 +13,7 @@ from rest_framework_simplejwt.tokens import RefreshToken # type: ignore
 
 class UserDetails(APIView):
     def post(self, request):
-        print(request.data,"-=-=-=-=-=-=-=-=-=-=-=-=-=-=-")
         serializer = UserSerializer(data=request.data)
-        print("0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0")
         if serializer.is_valid():
             serializer.save()          
             return Response(
@@ -33,6 +31,7 @@ class UserDetails(APIView):
                 'status': status.HTTP_400_BAD_REQUEST
             },
             status=status.HTTP_400_BAD_REQUEST)
+
 
 class UserLogin(APIView):
     def post(self,request):
@@ -54,7 +53,9 @@ class UserLogin(APIView):
             'error': True,
             'data': 'log In failed',
             'status': status.HTTP_400_BAD_REQUEST   
-            },status=status.HTTP_400_BAD_REQUEST)       
+            },status=status.HTTP_400_BAD_REQUEST)
+
+       
 
         
 
